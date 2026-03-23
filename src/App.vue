@@ -1,9 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useDeviceTilt } from './composables/useDeviceTilt'
+import { useOrientationMode } from './composables/useOrientationMode'
 import Landing from './components/Landing.vue'
 import Permission from './components/Permission.vue'
-import PortraitView from './components/PortraitView.vue'
+import PortraitOrbitView from './components/PortraitOrbitView.vue'
+import PortraitInvertedFlow from './components/PortraitInvertedFlow.vue'
 import LandscapeView from './components/LandscapeView.vue'
 
 const phase = ref('landing')
@@ -12,12 +14,13 @@ const permLoading = ref(false)
 const {
   effectiveTiltX,
   effectiveTiltY,
-  isLandscape,
   touchFallback,
   requestAccess,
   enableTouchFallback,
   setFallbackTilt,
 } = useDeviceTilt()
+
+const { orientationType } = useOrientationMode()
 
 const isMobile = computed(() => {
   const q = new URLSearchParams(window.location.search)
@@ -28,6 +31,10 @@ const isMobile = computed(() => {
   const mobileUa = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua)
   return mobileUa || touch
 })
+
+const landscapeVariant = computed(() =>
+  orientationType.value === 'landscape-secondary' ? 'puck' : 'balls'
+)
 
 async function onGrant() {
   permLoading.value = true
@@ -82,14 +89,24 @@ function applyPadPointer(e) {
         @fallback="onFallback"
       />
       <div v-else class="app-stage">
-        <div v-if="!isLandscape" class="stage-fill">
-          <PortraitView />
-        </div>
+        <PortraitOrbitView
+          v-if="orientationType === 'portrait-primary' || orientationType === 'unknown'"
+          class="stage-fill"
+          :tilt-x="effectiveTiltX"
+          :tilt-y="effectiveTiltY"
+        />
+        <PortraitInvertedFlow
+          v-else-if="orientationType === 'portrait-secondary'"
+          class="stage-fill"
+          :tilt-x="effectiveTiltX"
+          :tilt-y="effectiveTiltY"
+        />
         <LandscapeView
           v-else
           class="stage-fill"
           :tilt-x="effectiveTiltX"
           :tilt-y="effectiveTiltY"
+          :variant="landscapeVariant"
         />
         <div
           v-if="touchFallback && phase === 'app'"

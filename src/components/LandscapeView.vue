@@ -1,15 +1,28 @@
 <script setup>
 import GravityCanvas from './GravityCanvas.vue'
+import LandscapePuckCanvas from './LandscapePuckCanvas.vue'
 
 defineProps({
   tiltX: { type: Number, default: 0 },
   tiltY: { type: Number, default: 0 },
+  /** 'balls' = 가로 A(왼쪽/primary), 'puck' = 가로 B(오른쪽/secondary) — 기기마다 primary/secondary가 바뀔 수 있음 */
+  variant: { type: String, default: 'balls' },
 })
 </script>
 
 <template>
   <div class="landscape">
-    <GravityCanvas :tilt-x="tiltX" :tilt-y="tiltY" />
+    <GravityCanvas
+      v-if="variant === 'balls'"
+      badge="가로 A · 네온 볼"
+      :tilt-x="tiltX"
+      :tilt-y="tiltY"
+    />
+    <LandscapePuckCanvas
+      v-else
+      :tilt-x="tiltX"
+      :tilt-y="tiltY"
+    />
   </div>
 </template>
 

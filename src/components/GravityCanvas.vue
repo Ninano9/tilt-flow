@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const props = defineProps({
   tiltX: { type: Number, default: 0 },
   tiltY: { type: Number, default: 0 },
+  badge: { type: String, default: '' },
 })
 
 const root = ref(null)
@@ -127,7 +128,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="root" class="gravity-canvas">
+  <div class="gravity-wrap">
+    <p v-if="badge" class="gravity-badge">{{ badge }}</p>
+    <div ref="root" class="gravity-canvas">
     <div
       v-for="(b, i) in balls"
       :key="i"
@@ -141,10 +144,29 @@ onUnmounted(() => {
         boxShadow: `0 0 ${b.r * 1.2}px ${b.hue}88, inset 0 0 12px rgba(255,255,255,0.15)`,
       }"
     />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.gravity-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+}
+
+.gravity-badge {
+  margin: 0;
+  padding: 0 2px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #22d3ee;
+}
+
 .gravity-canvas {
   position: relative;
   width: 100%;
