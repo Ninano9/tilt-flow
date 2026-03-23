@@ -8,7 +8,6 @@ defineEmits(['grant', 'fallback'])
 <template>
   <div class="permission">
     <div class="glass card">
-      <h2 class="head">센서 권한</h2>
       <p class="copy">
         기울기 기능을 사용하려면 권한이 필요합니다
       </p>
@@ -19,13 +18,12 @@ defineEmits(['grant', 'fallback'])
           :disabled="loading"
           @click="$emit('grant')"
         >
-          {{ loading ? '처리 중…' : '권한 허용' }}
+          {{ loading ? '처리 중…' : '시작하기' }}
         </button>
         <button type="button" class="ghost" @click="$emit('fallback')">
           터치로 조작하기
         </button>
       </div>
-      <p class="note">iOS Safari는 버튼 탭 후 권한 창이 뜹니다. Android는 바로 사용할 수 있습니다.</p>
     </div>
   </div>
 </template>
@@ -44,18 +42,12 @@ defineEmits(['grant', 'fallback'])
   padding: 40px 28px;
 }
 
-.head {
-  margin: 0 0 12px;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.95);
-}
-
 .copy {
   margin: 0 0 28px;
   font-size: 0.95rem;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.55);
+  text-align: center;
 }
 
 .actions {
@@ -103,12 +95,5 @@ defineEmits(['grant', 'fallback'])
 .ghost:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
-}
-
-.note {
-  margin: 24px 0 0;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.35);
 }
 </style>
